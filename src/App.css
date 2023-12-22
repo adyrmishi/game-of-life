@@ -30,8 +30,26 @@
 
 #grid {
   display:grid;
-  grid-template-columns: repeat(auto-fill, 100px);
-  grid-gap: 1rem;
+  /* grid-template-columns: repeat(auto-fill, 100px);
+  grid-template-rows: repeat(auto-fill, 100px); */
+  grid-template: repeat(10, 1fr) / repeat(10, 2fr);
+
+}
+
+.alive {
+  background-color: #000000;
+}
+.alive, .dead {
+  border: 1px solid #000000;
+}
+.dead {
+  background-color: #ffffff;
+  color: #ffffff;
+}
+
+button {
+  padding: 10px;
+  margin: 10px;
 }
 
 @keyframes App-logo-spin {

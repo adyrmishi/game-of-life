@@ -2,15 +2,25 @@ import Cell from './Cell';
 import { useState, useEffect } from 'react';
 
 export default function Grid() {
-  let initialCellStatus = [
-    [0, 0, 0, 0, 0],
-    [0, 1, 1, 0, 0],
-    [0, 1, 0, 1, 0],
-    [0, 0, 1, 0, 0],
-    [0, 0, 0, 0, 0]
-  ];
+//   let initialCellStatus = [
+//     [0, 0, 0, 0, 0],
+//     [0, 1, 1, 0, 0],
+//     [0, 1, 0, 1, 0],
+//     [0, 0, 1, 0, 0],
+//     [0, 0, 0, 0, 0]
+//   ];
 
-  const [cellStatus, setCellStatus] = useState(initialCellStatus);
+  let grid = new Array(10);
+
+  for (let x = 0; x < 10; x++) {
+      grid[x] = new Array(10); 
+      for (let y = 0; y < 10; y++) {
+          grid[x][y] = Math.floor(Math.random() * 2);
+      }
+  }
+  
+    
+  const [cellStatus, setCellStatus] = useState(grid);
   const [iteration, setIteration] = useState(0);
 
   function findNextState(alive, neighbours) {
