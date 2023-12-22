@@ -1,27 +1,74 @@
 import Cell from './Cell';
+import { useState, useEffect } from 'react';
 
 export default function Grid() {
+  let initialCellStatus = [
+    [0, 0, 0, 0, 0],
+    [0, 1, 1, 0, 0],
+    [0, 1, 0, 1, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0]
+  ];
 
-    const cellStatus = [[0, 0, 0, 0, 0],
-                        [0, 0, 0, 0, 0],
-                        [0, 0, 1, 0, 0],
-                        [0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0]]
-    
-    const test = [1,0]
+  const [cellStatus, setCellStatus] = useState(initialCellStatus);
+  const [iteration, setIteration] = useState(0);
 
-    function makeRow(array) { return array.map(ele => <Cell state={ele}/>) }
-
-    function makeGrid(arries) {
-        return arries.map(array => <div>{makeRow(array)}</div>)
+  function findNextState(alive, neighbours) {
+    if (alive && neighbours < 2) {
+      return 0;
+    } else if (alive && (neighbours === 2 || neighbours === 3)) {
+      return 1;
+    } else if (alive && neighbours > 3) {
+      return 0;
+    } else if (!alive && neighbours === 3) {
+      return 1;
+    } else {
+      return alive;
     }
-    
-    return (
-        <>
-            <button>Start</button>
-            <div id="grid">
-                {makeGrid(cellStatus)}
-            </div>
-        </>
-    )
-};
+  }
+
+  function getAliveNeighbours(x, y) {
+    let aliveNeighbours = 0;
+    for (let i = x - 1; i <= x + 1; i++) {
+      for (let j = y - 1; j <= y + 1; j++) {
+        if (i >= 0 && i < 5 && j >= 0 && j < 5 && (i !== x || j !== y)) {
+          aliveNeighbours += cellStatus[j][i];
+        }
+      }
+    }
+    return aliveNeighbours;
+  }
+
+  function makeRow(array, y) {
+      return array.map((ele, x) => {
+          if (iteration === 0) {
+            return <Cell state={ele}/>;
+          } else {
+            return <Cell state={findNextState(ele, getAliveNeighbours(x, y))} />;
+        }
+    });
+  }
+
+  function makeGrid(arrays) {
+    return arrays.map((array, y) => <div>{makeRow(array, y)}</div>);
+  }
+
+  function triggerIteration() {
+    setIteration(prevIteration => prevIteration + 1);
+  }
+
+  useEffect(() => {
+    setCellStatus(previousCellStatus =>
+      previousCellStatus.map((row, y) =>
+        row.map((alive, x) => findNextState(alive, getAliveNeighbours(x, y)))));
+  }, [iteration]);
+
+  return (
+    <>
+      <button onClick={triggerIteration}>Start</button>
+      <div id="grid">
+        {makeGrid(cellStatus)}
+      </div>
+    </>
+  );
+}
