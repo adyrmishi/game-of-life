@@ -2,13 +2,6 @@ import Cell from './Cell';
 import { useState, useEffect } from 'react';
 
 export default function Grid() {
-//   let initialCellStatus = [
-//     [0, 0, 0, 0, 0],
-//     [0, 1, 1, 0, 0],
-//     [0, 1, 0, 1, 0],
-//     [0, 0, 1, 0, 0],
-//     [0, 0, 0, 0, 0]
-//   ];
 
   let grid = new Array(10);
 
@@ -77,7 +70,7 @@ export default function Grid() {
     <>
       <button onClick={triggerIteration}>Start</button>
       <div id="grid">
-        {makeGrid(cellStatus)}
+        {makeGrid(grid)}
       </div>
     </>
   );
