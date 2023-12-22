@@ -14,7 +14,22 @@ export default function Grid() {
   
     
   const [cellStatus, setCellStatus] = useState(grid);
-  const [iteration, setIteration] = useState(0);
+    const [iteration, setIteration] = useState(0);
+    const extinct = (grid) => {
+        for (let i = 0; i < 10; i++) {
+            for (let j = 0; j < 10; j++) {
+                if (grid[i][j] === 1) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    const reset = () => {
+        setCellStatus(grid);
+        setIteration(0);
+    }
 
   function findNextState(alive, neighbours) {
     if (alive && neighbours < 2) {
@@ -34,7 +49,7 @@ export default function Grid() {
     let aliveNeighbours = 0;
     for (let i = x - 1; i <= x + 1; i++) {
       for (let j = y - 1; j <= y + 1; j++) {
-        if (i >= 0 && i < 5 && j >= 0 && j < 5 && (i !== x || j !== y)) {
+        if (i >= 0 && i < 10 && j >= 0 && j < 10 && (i !== x || j !== y)) {
           aliveNeighbours += cellStatus[j][i];
         }
       }
@@ -60,17 +75,19 @@ export default function Grid() {
     setIteration(prevIteration => prevIteration + 1);
   }
 
-  useEffect(() => {
+    useEffect(() => {
+        extinct(cellStatus);
     setCellStatus(previousCellStatus =>
       previousCellStatus.map((row, y) =>
-        row.map((alive, x) => findNextState(alive, getAliveNeighbours(x, y)))));
+          row.map((alive, x) => findNextState(alive, getAliveNeighbours(x, y)))));
   }, [iteration]);
 
   return (
-    <>
-      <button onClick={triggerIteration}>Start</button>
+      <>
+          <button onClick={reset}>Reset</button> 
+          {!extinct(cellStatus)? <button onClick={triggerIteration}>Iterate</button> : false}
       <div id="grid">
-        {makeGrid(grid)}
+        {makeGrid(cellStatus)}
       </div>
     </>
   );
